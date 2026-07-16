@@ -1,0 +1,16 @@
+{
+  "name": "belidisini",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.13.1",
+  "description": "Belidisini - SaaS Marketplace Platform",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "build": "pnpm --parallel -r run build",
+    "lint": "pnpm --parallel -r run lint",
+    "clean": "pnpm --parallel -r run clean",
+    "db:generate": "pnpm --filter @belidisini/database generate",
+    "db:migrate": "pnpm --filter @belidisini/database migrate",
+    "db:seed": "pnpm --filter @belidisini/database seed"
+  }
+}
