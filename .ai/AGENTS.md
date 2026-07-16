@@ -486,6 +486,36 @@ Code should explain itself whenever possible.
 
 ---
 
+## Dependency Management
+
+After adding, removing, or updating dependencies:
+
+1. Run `pnpm install`.
+2. Ensure `pnpm-lock.yaml` is updated.
+3. Verify the project still builds successfully.
+4. Verify lint passes.
+5. Verify database generation/migrations if applicable.
+
+Do not continue implementing new features until dependency installation and validation complete successfully.
+
+Do not use `--force` unless the root cause has been identified and documented.
+
+---
+
+## Workspace Dependencies
+
+In a PNPM Workspace monorepo, every workspace package MUST explicitly declare all internal package dependencies using:
+
+"workspace:\*"
+
+Never rely on implicit workspace resolution.
+
+Do not import another workspace package unless it is declared in package.json.
+
+Run `pnpm install` only after updating dependency declarations to create the required workspace symlinks.
+
+---
+
 # AI Collaboration
 
 Assume multiple AI agents and human developers will work on this repository simultaneously.
@@ -532,6 +562,68 @@ Always run package installation and project initialization from the repository r
 
 ---
 
+# Authentication Rules
+
+Authentication must use:
+
+- JWT Access Token
+- JWT Refresh Token
+- bcrypt password hashing
+- Passport JWT Strategy
+
+Never store plain text passwords.
+
+Never hardcode secrets.
+
+Load all secrets from environment variables.
+
+Controllers must remain thin.
+
+Business logic belongs in Services.
+
+Authentication should be designed so OAuth providers (Google, GitHub, etc.) can be added later without major refactoring.
+
+---
+
 # Final Objective
 
 Belidisini should become a scalable SaaS marketplace platform capable of supporting hundreds of thousands of sellers and millions of buyers without requiring architectural redesign.
+
+---
+
+# REMEMBER!
+
+A phase is NEVER considered complete immediately after implementation.
+
+Every phase must end with a mandatory audit.
+
+A phase can only be marked as completed if:
+
+- Build passes
+- Lint passes
+- Type checking passes
+- Database validation passes (if applicable)
+- Architecture review passes
+- No critical issues remain
+
+A phase audit consists of two stages:
+
+1. Audit Execution
+
+- Execute all audit checks.
+- Identify every issue.
+- Fix all issues found.
+- Repeat until no critical issues remain.
+
+2. Audit Completion
+   A phase is considered PASSED only when every audit check succeeds without critical errors.
+
+Never mark a phase as completed before the final audit passes.
+
+Only then may the AI update ROADMAP, CURRENT_STATE, CHANGELOG, and NEXT_TASK.
+
+Never modify global development environment
+(Node, pnpm config, git config, environment variables, OS configuration)
+unless explicitly requested by the user.
+
+Always prefer project-local changes over machine-global changes.

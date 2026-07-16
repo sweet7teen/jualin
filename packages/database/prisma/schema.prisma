@@ -46,20 +46,21 @@ enum ProductStatus {
 // ==========================================
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  phone     String?
-  avatar    String?
-  role      Role     @default(BUYER)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String         @id @default(cuid())
+  email          String         @unique
+  password       String
+  name           String?
+  phone          String?
+  avatar         String?
+  role           Role           @default(BUYER)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
-  store        Store?
-  buyerProfile BuyerProfile?
-  orders       Order[]
+  store          Store?
+  buyerProfile   BuyerProfile?
+  orders         Order[]
+  refreshTokens  RefreshToken[]
 }
 
 model BuyerProfile {
@@ -71,6 +72,22 @@ model BuyerProfile {
 
   orders    Order[]
   wishlists Wishlist[]
+}
+
+// ==========================================
+// AUTH
+// ==========================================
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
 }
 
 // ==========================================

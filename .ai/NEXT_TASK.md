@@ -1,38 +1,33 @@
 # Next Task
 
-## Phase 2: Authentication & Authorization
+## Phase 3: Store Management
 
 ### Scope
-Backend only — NestJS auth module with JWT-based authentication and role-based access control.
+Backend + minimal frontend — Store CRUD, slug-based routing, seller dashboard skeleton.
 
-### Step 1: Dependencies
-Add to `apps/backend`:
-- `@nestjs/jwt`, `@nestjs/passport`, `passport`, `passport-jwt`, `bcrypt`
+### Step 1: Prisma Schema Updates
+- Ensure `Store` model has proper indexes on `slug`, `userId`
+- Add `StoreModule` service with repository pattern
 
-### Step 2: Prisma Schema
-Add `RefreshToken` model to `packages/database/prisma/schema.prisma`:
-- id, userId, token, expiresAt, createdAt
-- FK to User
-
-### Step 3: Auth Module (`apps/backend/src/modules/auth/`)
+### Step 2: Store Module (`apps/backend/src/modules/store/`)
 Create feature module with:
-- `auth.module.ts` — register JWT strategy, AuthController, AuthService
-- `auth.controller.ts` — POST register, login, refresh, GET me
-- `auth.service.ts` — business logic for register, login, token rotation
-- `dto/register.dto.ts` — email, password, name (class-validator)
-- `dto/login.dto.ts` — email, password
+- `store.module.ts` — register StoreService, StoreController
+- `store.controller.ts` — CRUD endpoints
+- `store.service.ts` — business logic
+- `dto/create-store.dto.ts` — name, slug, description (class-validator)
+- `dto/update-store.dto.ts` — partial update
 
-### Step 4: Common (`apps/backend/src/common/`)
-- `guards/jwt-auth.guard.ts` — validates JWT on protected routes
-- `guards/roles.guard.ts` — checks User.role against required roles
-- `decorators/roles.decorator.ts` — @Roles('SELLER', 'SUPER_ADMIN')
-- `decorators/current-user.decorator.ts` — @CurrentUser() param decorator
-- `strategies/jwt.strategy.ts` — passport-jwt strategy
+### Endpoints
+- `POST /api/v1/stores` — create store (SELLER only, protected)
+- `GET /api/v1/stores` — list public stores (public, with pagination)
+- `GET /api/v1/stores/:slug` — get store by slug (public)
+- `PATCH /api/v1/stores/:id` — update store (owner only, protected)
+- `DELETE /api/v1/stores/:id` — deactivate store (owner only, protected)
 
-### Validation
+### Step 3: Validation
 - `nest build` must succeed
-- Swagger UI shows all 4 endpoints
-- Register creates user, returns tokens
-- Login with valid creds returns tokens
-- Refresh rotates token
-- /me returns current user (requires Bearer token)
+- `eslint src/` passes clean
+- Swagger shows all 5 endpoints
+- Create store requires SELLER role
+- Update/delete requires store ownership
+- Slug uniqueness enforced

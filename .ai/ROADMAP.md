@@ -1,4 +1,4 @@
-# Project Roadmap
+﻿# Project Roadmap
 
 ## Phase 1: Foundation ✅
 - [x] pnpm monorepo setup
@@ -8,11 +8,11 @@
 - [x] Docker Compose (MySQL, Redis, MinIO)
 - [x] Shared packages (types, config)
 
-## Phase 2: Authentication & Authorization
-- [ ] JWT auth (register, login, refresh)
-- [ ] RBAC guards and decorators
-- [ ] Protected routes
-- [ ] User profile endpoint
+## Phase 2: Authentication & Authorization ✅
+- [x] JWT auth (register, login, refresh)
+- [x] RBAC guards and decorators
+- [x] Protected routes
+- [x] User profile endpoint
 
 ## Phase 3: Store Management
 - [ ] Store CRUD (create, update, slug routing)

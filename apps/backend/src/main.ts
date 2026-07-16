@@ -12,7 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   app.enableCors({
-    origin: configService.get('FRONTEND_URL', 'http://localhost:3000'),
+    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
     credentials: true,
   });
 
@@ -34,10 +34,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = configService.get('PORT', 3001);
+  const port = configService.get<number>('PORT', 3001);
   await app.listen(port);
 
   console.log(`🚀 Application running on: http://localhost:${port}`);
   console.log(`📚 Swagger docs: http://localhost:${port}/api/docs`);
 }
-bootstrap();
+
+void bootstrap();

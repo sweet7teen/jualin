@@ -20,6 +20,21 @@
 - **Reason**: Prisma generates types shared across frontend/backend; MySQL per AGENTS.md
 - **Date**: 2026-07-16
 
+## Prisma Client Consumption
+- **Decision**: Backend imports from `@belidisini/database`, never from `@prisma/client` directly
+- **Reason**: Single source of truth for database types; workspace package owns schema + generated client
+- **Date**: 2026-07-16
+
+## Workspace Package Resolution
+- **Decision**: `@belidisini/database` listed as `workspace:*` dependency in `@belidisini/backend`
+- **Reason**: pnpm requires explicit dependency declaration to create workspace symlinks
+- **Date**: 2026-07-16
+
+## Line Ending Policy
+- **Decision**: `lf` enforced via `.prettierrc` (`endOfLine: "lf"`), ESLint inherits from it
+- **Reason**: Cross-platform consistency; avoids CRLF/LF mixing on Windows + Unix
+- **Date**: 2026-07-17
+
 ## Font Strategy
 - **Decision**: System font stack instead of Google Fonts
 - **Reason**: Avoids external network dependency, faster loading, no FOUT
@@ -38,4 +53,9 @@
 ## Wishlist Model
 - **Decision**: Wishlist linked to BuyerProfile, not directly to User
 - **Reason**: BuyerProfile is the buyer-specific context; avoids redundant FK paths
+- **Date**: 2026-07-16
+
+## Authentication
+- **Decision**: JWT with access (15m) + refresh (7d) token pair, bcrypt password hashing (cost 12)
+- **Reason**: Stateless auth suitable for API-first architecture; refresh rotation for security
 - **Date**: 2026-07-16
