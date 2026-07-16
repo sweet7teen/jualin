@@ -514,6 +514,24 @@ When multiple solutions exist:
 
 ---
 
+## Monorepo Rules
+
+This project is a PNPM Workspace monorepo.
+
+Only the repository root may contain:
+
+- pnpm-workspace.yaml
+- pnpm-lock.yaml
+
+Workspace packages and apps must NEVER create their own:
+
+- pnpm-workspace.yaml
+- pnpm-lock.yaml
+
+Always run package installation and project initialization from the repository root unless explicitly required otherwise.
+
+---
+
 # Final Objective
 
 Belidisini should become a scalable SaaS marketplace platform capable of supporting hundreds of thousands of sellers and millions of buyers without requiring architectural redesign.

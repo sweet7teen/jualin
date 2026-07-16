@@ -1,16 +1,17 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Foundation bootstrapped
+**Status**: Phase 1 — Foundation (reviewed & hardened)
 
 ## What's Done
-- pnpm monorepo workspace configured
-- NestJS backend (`apps/backend`) scaffolded with ConfigModule, Swagger, ValidationPipe, global prefix `/api/v1`
-- Next.js frontend (`apps/web`) scaffolded with Tailwind CSS, App Router
-- Prisma schema (`packages/database`) with full ERD: User, BuyerProfile, Store, Subscription, Product, Order, OrderItem, Wishlist + enums
-- Docker Compose for MySQL 8, Redis 7, MinIO (S3-compatible)
+- pnpm monorepo workspace configured (single lockfile at root, no rogue files)
+- NestJS backend (`apps/backend`) — ConfigModule, Swagger at `/api/docs`, ValidationPipe, global prefix `/api/v1`
+- Next.js frontend (`apps/web`) — Tailwind CSS v4, App Router, system font stack
+- Prisma schema (`packages/database`) — User, BuyerProfile, Store, Subscription, Product, Order, OrderItem, Wishlist + 4 enums
+- Docker Compose — MySQL 8, Redis 7, MinIO
 - Shared packages: `@belidisini/types`, `@belidisini/config`
 - Both apps build successfully
+- Root `.gitignore` covers all apps, no per-app duplicates
 
 ## Architecture
 ```
@@ -32,5 +33,5 @@ belidisini/
 - `pnpm dev` — run backend + frontend in parallel
 
 ## Blockers
-- Prisma client generation requires network (blocked in sandbox). Run `pnpm db:generate` after first install.
-- Google Fonts blocked in sandbox. Layout uses system font stack.
+- Prisma client generation requires network. Run `pnpm db:generate` outside sandbox.
+- Frontend uses system font stack (Google Fonts blocked in sandbox).

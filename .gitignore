@@ -1,11 +1,41 @@
+# Dependencies
 node_modules/
+
+# Build outputs
 dist/
 build/
 .next/
+
+# Environment
 .env
 .env.local
-*.log
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
+
+# pnpm
+.pnpm-store/
+
+# Turbo
 .turbo/
+
+# Coverage
 coverage/
+
+# Logs
+*.log
+
+# Next.js
+next-env.d.ts
+.vercel
+
+# TypeScript
+*.tsbuildinfo

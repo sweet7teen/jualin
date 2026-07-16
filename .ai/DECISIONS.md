@@ -29,3 +29,13 @@
 - **Decision**: Docker Compose for MySQL, Redis, MinIO
 - **Reason**: Local dev parity with production; MinIO for S3-compatible storage
 - **Date**: 2026-07-16
+
+## Gitignore Strategy
+- **Decision**: Single root `.gitignore`, no per-app duplicates
+- **Reason**: Follows pnpm monorepo convention; simpler maintenance
+- **Date**: 2026-07-16
+
+## Wishlist Model
+- **Decision**: Wishlist linked to BuyerProfile, not directly to User
+- **Reason**: BuyerProfile is the buyer-specific context; avoids redundant FK paths
+- **Date**: 2026-07-16
