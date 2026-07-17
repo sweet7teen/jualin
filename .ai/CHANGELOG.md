@@ -1,26 +1,34 @@
 # Changelog
 
+## [0.6.2] - 2026-07-17
+
+### Added
+- Payment abstraction layer (`apps/backend/src/modules/payment/`):
+  - `PaymentProvider` interface — `createPayment()`, `verifyPayment()`, `refundPayment()`
+  - `PaymentService` — persists Payment records, delegates external calls to provider via DI
+  - `PAYMENT_PROVIDER` injection token — registered as `null` by default
+  - Provider is `@Optional()` — service works without concrete provider
+  - `PaymentModule` registered in AppModule
+
+## [0.6.1] - 2026-07-17
+
+### Added
+- Cart module with upsert, product validation, quantity-stock check on add and update
+
+### Fixed
+- Cart `add()` now validates `dto.quantity > product.stock` (was missing)
+
+## [0.6.0] - 2026-07-17
+
+### Added
+- CartItem, Payment, PaymentStatus schema additions
+- BuyerProfile auto-creation on register
+- Indexes on CartItem.buyerId, Payment.status, Payment.providerPaymentId
+
 ## [0.5.0] - 2026-07-17
 
 ### Added
-- Product module (`apps/backend/src/modules/product/`):
-  - `POST /api/v1/stores/:storeId/products` — create product (owner only, subscription gated)
-  - `GET /api/v1/stores/:storeId/products` — list active products (public, paginated)
-  - `GET /api/v1/stores/:storeSlug/products/:productSlug` — get product by slugs (public)
-  - `PATCH /api/v1/products/:id` — update product (owner only)
-  - `DELETE /api/v1/products/:id` — archive product (owner only)
-  - Per-store slug uniqueness enforced via `@@unique([storeId, slug])`
-  - Creation gating: products default to ACTIVE if subscription active, DRAFT otherwise
-  - **Runtime subscription visibility**: public endpoints check subscription at query time
-  - Image URLs stored as JSON array in `@db.Text` field
-  - Ownership enforced via store.userId check
-- `isSubscriptionActive()` private helper in ProductService
-
-### Changed
-- Prisma `Product.slug` constraint: `@unique` (global) → `@@unique([storeId, slug])` (per-store)
-- `findAll()` — returns empty if subscription expired/inactive
-- `findBySlug()` — returns 404 if subscription expired/inactive
-- Product status lifecycle separated from subscription lifecycle
+- Product module with subscription gating, runtime visibility, per-store slugs
 
 ## [0.4.0] - 2026-07-17
 

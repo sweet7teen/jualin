@@ -6,6 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { StoreModule } from './modules/store/store.module';
 import { ProductModule } from './modules/product/product.module';
+import { CartModule } from './modules/cart/cart.module';
+import { PaymentModule } from './modules/payment/payment.module';
 import configs from './config';
 
 @Module({
@@ -19,6 +21,8 @@ import configs from './config';
     AuthModule,
     StoreModule,
     ProductModule,
+    CartModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

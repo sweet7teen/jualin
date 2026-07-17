@@ -1,7 +1,7 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Phase 4 — Product Management (completed, audited)
+**Status**: Phase 5 — Buyer Experience (payment abstraction checkpoint complete)
 
 ## What's Done
 - pnpm monorepo workspace configured
@@ -10,49 +10,29 @@
 - Docker Compose — MySQL 8, Redis 7, MinIO
 - Shared packages: `@belidisini/types`, `@belidisini/config`
 - Auth module — register, login, refresh, getProfile (JWT, bcrypt, RBAC)
-- Common guards/decorators — JwtAuthGuard, RolesGuard, @Roles, @CurrentUser, JwtStrategy
-- Store module — CRUD with slug-based routing, ownership enforcement, seller-only creation
-- **Product module** — CRUD with per-store slug uniqueness, subscription gating, image JSON storage, runtime subscription visibility
+- Store module, Product module, Cart module
+- **Payment abstraction** — `PaymentProvider` interface, `PaymentService`, `PaymentModule` (no concrete provider yet)
+- **Schema**: CartItem, Payment, PaymentStatus — with proper indexes and referential actions
 
-## Product Endpoints
+## Payment Architecture
+```
+CheckoutService (future)
+  → PaymentService
+    → PaymentProvider (interface — defined now)
+      → QrisPaymentProvider (concrete — deferred to Checkout checkpoint)
+```
+
+- `PAYMENT_PROVIDER` token: injected via `@Inject(PAYMENT_PROVIDER)`
+- Provider is `@Optional()` — service works without concrete provider (DB-only operations)
+- Concrete provider swaps in via `useFactory` or `useClass` when Checkout adds QRIS
+
+## Cart Endpoints
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| `POST` | `/api/v1/stores/:storeId/products` | Owner | Create product |
-| `GET` | `/api/v1/stores/:storeId/products` | Public | List active products (visibility gated by subscription) |
-| `GET` | `/api/v1/stores/:storeSlug/products/:productSlug` | Public | Get product by slugs (visibility gated by subscription) |
-| `PATCH` | `/api/v1/products/:id` | Owner | Update product |
-| `DELETE` | `/api/v1/products/:id` | Owner | Archive product |
-
-## Subscription Visibility Rule
-Public product visibility requires BOTH conditions:
-- `Product.status === 'ACTIVE'`
-- Store subscription `status === 'ACTIVE'` AND `endDate > now`
-
-If subscription is expired/inactive:
-- Collection endpoints return empty `data: []`
-- Single-product endpoints return 404
-
-Product status (DRAFT/ACTIVE/ARCHIVED) is independent of subscription lifecycle.
-
-## Architecture
-```
-belidisini/
-  apps/
-    backend/          NestJS API server (port 3001)
-    web/              Next.js frontend (port 3000)
-  packages/
-    database/         Prisma schema + client
-    types/            Shared TypeScript types
-    config/           Shared constants
-  docker-compose.yml  MySQL, Redis, MinIO
-```
-
-## Configuration Layer
-```
-apps/backend/src/config/
-  app.config.ts, jwt.config.ts, auth.config.ts, swagger.config.ts,
-  cors.config.ts, pagination.config.ts, storage.config.ts, redis.config.ts
-```
+| `GET` | `/api/v1/cart` | Buyer | List cart items |
+| `POST` | `/api/v1/cart/items` | Buyer | Add item (upsert) |
+| `PATCH` | `/api/v1/cart/items/:id` | Buyer | Update quantity |
+| `DELETE` | `/api/v1/cart/items/:id` | Buyer | Remove item |
 
 ## Backlog
 See `.ai/BACKLOG.md` for deferred improvements.
