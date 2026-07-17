@@ -1,27 +1,16 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Phase 6 — Super Admin (checkpoint 1-2 complete: seed + user management)
+**Status**: Phase 7 — PWA & Polish (checkpoint 3 complete: animated transitions)
 
 ## What's Done
-- All Buyer Experience modules completed
-- **Admin seed** (`packages/database/prisma/seed.ts`) — SUPER_ADMIN user created from env vars
-- **Admin module** (`apps/backend/src/modules/admin/`) with user management
-- **User management** — list, detail, update (role, isActive, name, email)
-
-## Admin Endpoints
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/v1/admin/users` | SUPER_ADMIN | List users (paginated, filterable by role) |
-| `GET` | `/api/v1/admin/users/:id` | SUPER_ADMIN | Get user detail |
-| `PATCH` | `/api/v1/admin/users/:id` | SUPER_ADMIN | Update user (self-demote/deactivate blocked) |
-
-## Business Rules
-- Admin cannot change own role → 403
-- Admin cannot deactivate own account → 403
-- Admin can update any other user freely
-- Email uniqueness enforced on update
+- All backend phases 1–6 complete (10 modules, 30+ endpoints)
+- Theme persistence (ThemeProvider, useTheme, FOUC prevention)
+- PWA (manifest, SVG icons, service worker with caching)
+- **Animated transitions** — fade-in on body, slide-up on content, reduced-motion respect
+- No new dependencies — pure CSS keyframes + Tailwind theme utilities
 
 ## Blockers
 - `node_modules` corrupted in sandbox — build/tooling unavailable.
-- Seed script requires network + MySQL.
+- Prisma seed/generate/migrate require network + MySQL.
+- PWA icons are SVG placeholders — replace with proper PNGs for production.

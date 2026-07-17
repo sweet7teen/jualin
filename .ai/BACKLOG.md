@@ -1,4 +1,4 @@
-# Backlog
+﻿# Backlog
 
 Items intentionally deferred from earlier phases. May be picked up in future phases or dedicated refactoring passes.
 
@@ -19,7 +19,14 @@ Items intentionally deferred from earlier phases. May be picked up in future pha
 
 ## Performance
 - Redis caching for public store listing.
-- Optimize public product visibility queries. Current implementation runs separate subscription + product queries. Benchmark before optimizing: single JOIN query, Redis cache, or materialized visibility state.
+- Optimize public product visibility queries. Current implementation runs separate subscription + product queries.
 
 ## Orders
-- Snapshot product name and primary image into OrderItem so historical orders remain fully self-contained even if products are renamed or removed.
+- Snapshot product name and primary image into OrderItem.
+
+## PWA
+- Refine Service Worker caching strategy:
+  - Cache-first for static assets (CSS, JS, images, fonts)
+  - Network-first for HTML/document navigation
+  - Network-only for API requests
+  - Offline fallback page for navigation failures

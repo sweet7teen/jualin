@@ -1,23 +1,12 @@
 # Next Task
 
-## Phase 5: Buyer Experience
+## Phase 7: PWA & Polish
 
-### Scope
-Backend — Shopping cart, checkout with QRIS payment, order history, wishlist management.
+All checkpoints complete:
+- Checkpoint 1: Theme persistence ✅
+- Checkpoint 2: Service Worker & Manifest ✅
+- Checkpoint 3: Animated transitions ✅
 
-### Endpoints (preliminary)
-- Cart: add, remove, list items
-- Checkout: create order via QRIS payment (provider interface)
-- Orders: list user orders, get order detail
-- Wishlist: add, remove, list items
+**The Belidisini MVP backend and frontend foundation is feature-complete.**
 
-### Requirements
-- Payment provider interface (strategy pattern)
-- QRIS as the first payment provider implementation
-- Order lifecycle management
-- Soft delete for wishlist items
-
-### Validation
-- `nest build` — pass
-- `eslint src/` — pass
-- Swagger documents all endpoints
+Future work will be defined based on roadmap review and prioritization.
