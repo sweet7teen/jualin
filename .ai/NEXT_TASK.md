@@ -1,33 +1,28 @@
 # Next Task
 
-## Phase 3: Store Management
+## Phase 4: Product Management
 
 ### Scope
-Backend + minimal frontend — Store CRUD, slug-based routing, seller dashboard skeleton.
-
-### Step 1: Prisma Schema Updates
-- Ensure `Store` model has proper indexes on `slug`, `userId`
-- Add `StoreModule` service with repository pattern
-
-### Step 2: Store Module (`apps/backend/src/modules/store/`)
-Create feature module with:
-- `store.module.ts` — register StoreService, StoreController
-- `store.controller.ts` — CRUD endpoints
-- `store.service.ts` — business logic
-- `dto/create-store.dto.ts` — name, slug, description (class-validator)
-- `dto/update-store.dto.ts` — partial update
+Backend — Product CRUD with image upload support via MinIO/S3.
 
 ### Endpoints
-- `POST /api/v1/stores` — create store (SELLER only, protected)
-- `GET /api/v1/stores` — list public stores (public, with pagination)
-- `GET /api/v1/stores/:slug` — get store by slug (public)
-- `PATCH /api/v1/stores/:id` — update store (owner only, protected)
-- `DELETE /api/v1/stores/:id` — deactivate store (owner only, protected)
+- `POST /api/v1/stores/:storeId/products` — create product (store owner only)
+- `GET /api/v1/stores/:storeId/products` — list products for a store (public, paginated)
+- `GET /api/v1/products/:slug` — get product by slug (public)
+- `PATCH /api/v1/products/:id` — update product (store owner only)
+- `DELETE /api/v1/products/:id` — deactivate product (store owner only)
 
-### Step 3: Validation
-- `nest build` must succeed
-- `eslint src/` passes clean
+### Requirements
+- Product has: name, slug, description, price, stock, images, status
+- Only seller with active subscription can create ACTIVE products
+- Images stored in MinIO, URLs stored as JSON array in DB
+- Product visibility controlled by subscription status
+- Slug uniqueness enforced per store (slug + storeId unique)
+- Pagination via config layer
+
+### Validation
+- `nest build` — pass
+- `eslint src/` — pass
 - Swagger shows all 5 endpoints
-- Create store requires SELLER role
-- Update/delete requires store ownership
-- Slug uniqueness enforced
+- Ownership enforced
+- Subscription check on create

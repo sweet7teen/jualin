@@ -1,4 +1,4 @@
-﻿# Project Roadmap
+# Project Roadmap
 
 ## Phase 1: Foundation ✅
 - [x] pnpm monorepo setup
@@ -14,11 +14,11 @@
 - [x] Protected routes
 - [x] User profile endpoint
 
-## Phase 3: Store Management
-- [ ] Store CRUD (create, update, slug routing)
-- [ ] Store listing page
-- [ ] Store profile page
-- [ ] Subscription management
+## Phase 3: Store Management ✅
+- [x] Store CRUD (create, update, slug routing)
+- [x] Store listing page (public)
+- [x] Store detail page (public, with products)
+- [x] Ownership enforcement
 
 ## Phase 4: Product Management
 - [ ] Product CRUD with images (MinIO)
