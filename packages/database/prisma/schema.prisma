@@ -137,7 +137,7 @@ model Product {
   storeId     String
   store       Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
   name        String
-  slug        String        @unique
+  slug        String
   description String?
   price       Int
   stock       Int           @default(0)
@@ -148,6 +148,9 @@ model Product {
 
   orderItems OrderItem[]
   wishlists  Wishlist[]
+
+  @@unique([storeId, slug])
+  @@map("products")
 }
 
 // ==========================================

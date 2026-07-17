@@ -45,6 +45,12 @@
 - **Reason**: `@types/jsonwebtoken` defines `expiresIn` as `StringValue | number`. `StringValue` is a branded template literal from `ms` library, incompatible with raw strings from env vars. Numbers are type-safe and unambiguous.
 - **Date**: 2026-07-17
 
+## Product Slug Uniqueness
+- **Decision**: Product slugs are unique per store, enforced by Prisma constraint `@@unique([storeId, slug])`. Public product URLs are store-scoped: `GET /api/v1/stores/:storeSlug/products/:productSlug`.
+- **Reason**: Flat global slug namespace does not scale to hundreds of thousands of sellers. Per-store scoping gives each seller full control over their product URLs and is consistent with industry standards (Etsy, Shopify). All product endpoints already scope to store via `storeId`.
+- **Consequences**: Removed `@unique` from `Product.slug`. No backward compatibility layer needed (unreleased project).
+- **Date**: 2026-07-17
+
 ## Authentication
 - **Decision**: JWT with access + refresh token pair, bcrypt password hashing (configurable cost)
 - **Reason**: Stateless auth suitable for API-first architecture; refresh rotation for security

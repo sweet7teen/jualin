@@ -20,11 +20,12 @@
 - [x] Store detail page (public, with products)
 - [x] Ownership enforcement
 
-## Phase 4: Product Management
-- [ ] Product CRUD with images (MinIO)
-- [ ] Product listing with search & filters
-- [ ] Product detail page
-- [ ] Stock management
+## Phase 4: Product Management ✅
+- [x] Product CRUD with per-store slug uniqueness
+- [x] Product listing by store (public, paginated)
+- [x] Product detail by store+product slug (public)
+- [x] Subscription gating (active → ACTIVE, inactive → DRAFT)
+- [x] Image JSON storage
 
 ## Phase 5: Buyer Experience
 - [ ] Shopping cart
