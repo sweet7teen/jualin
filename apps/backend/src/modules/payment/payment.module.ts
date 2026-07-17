@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { NoopPaymentProvider } from './providers/noop-payment.provider';
+import { QrisPaymentProvider } from './providers/qris-payment.provider';
 import { PAYMENT_PROVIDER } from './payment.constants';
 
 @Module({
@@ -8,7 +8,7 @@ import { PAYMENT_PROVIDER } from './payment.constants';
     PaymentService,
     {
       provide: PAYMENT_PROVIDER,
-      useClass: NoopPaymentProvider,
+      useClass: QrisPaymentProvider,
     },
   ],
   exports: [PaymentService],

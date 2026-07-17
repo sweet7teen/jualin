@@ -20,3 +20,6 @@ Items intentionally deferred from earlier phases. May be picked up in future pha
 ## Performance
 - Redis caching for public store listing.
 - Optimize public product visibility queries. Current implementation runs separate subscription + product queries. Benchmark before optimizing: single JOIN query, Redis cache, or materialized visibility state.
+
+## Orders
+- Snapshot product name and primary image into OrderItem so historical orders remain fully self-contained even if products are renamed or removed.

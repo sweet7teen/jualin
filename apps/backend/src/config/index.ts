@@ -6,5 +6,6 @@ import cors from './cors.config';
 import pagination from './pagination.config';
 import storage from './storage.config';
 import redis from './redis.config';
+import payment from './payment.config';
 
-export default [app, jwt, auth, swagger, cors, pagination, storage, redis];
+export default [app, jwt, auth, swagger, cors, pagination, storage, redis, payment];
