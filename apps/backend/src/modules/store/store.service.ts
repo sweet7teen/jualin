@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CacheService } from '../../cache/cache.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 
@@ -14,6 +15,7 @@ export class StoreService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
+    private cacheService: CacheService,
   ) {}
 
   async create(userId: string, dto: CreateStoreDto) {
@@ -42,10 +44,14 @@ export class StoreService {
       },
     });
 
+    this.cacheService.invalidate('stores');
     return store;
   }
 
   async findAll() {
+    const cached = this.cacheService.get<any>('stores:list');
+    if (cached) return cached;
+
     const defaultLimit = this.configService.get<number>('pagination.defaultLimit', 20);
 
     const stores = await this.prisma.store.findMany({
@@ -58,13 +64,13 @@ export class StoreService {
       where: { isActive: true },
     });
 
-    return {
+    const result = {
       data: stores,
-      meta: {
-        total,
-        limit: defaultLimit,
-      },
+      meta: { total, limit: defaultLimit },
     };
+
+    this.cacheService.set('stores:list', result, 300_000);
+    return result;
   }
 
   async findBySlug(slug: string) {
@@ -87,50 +93,28 @@ export class StoreService {
   }
 
   async update(userId: string, storeId: string, dto: UpdateStoreDto) {
-    const store = await this.prisma.store.findUnique({
-      where: { id: storeId },
-    });
+    const store = await this.prisma.store.findUnique({ where: { id: storeId } });
 
-    if (!store) {
-      throw new NotFoundException('Store not found');
-    }
-
-    if (store.userId !== userId) {
-      throw new ForbiddenException('You do not own this store');
-    }
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.userId !== userId) throw new ForbiddenException('You do not own this store');
 
     if (dto.slug && dto.slug !== store.slug) {
-      const existingSlug = await this.prisma.store.findUnique({
-        where: { slug: dto.slug },
-      });
-
-      if (existingSlug) {
-        throw new ConflictException('Slug is already taken');
-      }
+      const existingSlug = await this.prisma.store.findUnique({ where: { slug: dto.slug } });
+      if (existingSlug) throw new ConflictException('Slug is already taken');
     }
 
-    return this.prisma.store.update({
-      where: { id: storeId },
-      data: dto,
-    });
+    const updated = await this.prisma.store.update({ where: { id: storeId }, data: dto });
+    this.cacheService.invalidate('stores');
+    return updated;
   }
 
   async remove(userId: string, storeId: string) {
-    const store = await this.prisma.store.findUnique({
-      where: { id: storeId },
-    });
+    const store = await this.prisma.store.findUnique({ where: { id: storeId } });
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.userId !== userId) throw new ForbiddenException('You do not own this store');
 
-    if (!store) {
-      throw new NotFoundException('Store not found');
-    }
-
-    if (store.userId !== userId) {
-      throw new ForbiddenException('You do not own this store');
-    }
-
-    return this.prisma.store.update({
-      where: { id: storeId },
-      data: { isActive: false },
-    });
+    const result = await this.prisma.store.update({ where: { id: storeId }, data: { isActive: false } });
+    this.cacheService.invalidate('stores');
+    return result;
   }
 }

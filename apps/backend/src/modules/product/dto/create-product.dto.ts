@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsOptional, IsArray, Min, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsArray, Min, MinLength, MaxLength, Matches } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProductDto {

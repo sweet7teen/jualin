@@ -13,6 +13,8 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { HealthModule } from './health/health.module';
+import { PolicyModule } from './common/policy/policy.module';
+import { CacheModule } from './cache/cache.module';
 import configs from './config';
 
 @Module({
@@ -23,6 +25,7 @@ import configs from './config';
       load: configs,
     }),
     PrismaModule,
+    CacheModule,
     AuthModule,
     StoreModule,
     ProductModule,
@@ -33,6 +36,7 @@ import configs from './config';
     WishlistModule,
     AdminModule,
     HealthModule,
+    PolicyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

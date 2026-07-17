@@ -1,19 +1,21 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Phase 8 — Production Hardening (checkpoint 1-2 complete)
+**Status**: Phase 8 — Production Hardening (checkpoints 1-5 complete)
 
 ## What's Done
-- All 7 MVP phases complete
-- Security hardening — rate limiting, JWT validation, auth audit logging
-- **Infrastructure & CI/CD**:
-  - `Dockerfile` — multi-stage build (node:22-alpine)
-  - `docker-compose.prod.yml` — MySQL, Redis, MinIO, backend
-  - `GET /api/v1/health` — DB connection check, uptime, status
-  - `scripts/validate-env.js` — validates required env vars on startup
-  - `.github/workflows/ci.yml` — GitHub Actions: lint, type-check, Prisma, build, test
-  - `HealthModule` registered in AppModule
+- Security hardening, Infrastructure & CI/CD, Unit Test foundation
+- Performance & Scalability — cache service, Prisma query logging, N+1 and pagination audits
+- **Observability** (Phase 8, Checkpoint 5):
+  - Request correlation ID (`x-correlation-id` header, auto-generated if missing)
+  - Request logging interceptor (method, URL, status, duration, correlation ID)
+  - Health check endpoint (database status, uptime)
+  - All logs include correlation ID for request tracing
+
+## Testing Roadmap
+- ✅ Unit Test foundation (auth, checkout, subscription invariants)
+- ⏳ Integration Tests — planned
+- ⏳ Critical End-to-End Tests — planned
 
 ## Blockers
-- `node_modules` corrupted in sandbox — build/tooling unavailable.
-- Docker images must be built in an environment with network access.
+- Cache is in-memory — replace with Redis for multi-instance deployments.

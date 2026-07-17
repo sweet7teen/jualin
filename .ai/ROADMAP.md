@@ -1,11 +1,15 @@
 # Project Roadmap
 
-## Phases 1–7: MVP Complete ✅
+## Phases 1â€“7: MVP Complete âœ…
 All 7 phases delivered: Foundation, Auth, Store, Product, Buyer Experience, Super Admin, PWA & Polish.
 
 ---
 
 ## Phase 8: Production Hardening (proposed)
+
+### Future Evolution (Post-Phase 8)
+- Evolve request logging from plain-text to structured JSON logging (Pino or @nestjs/common Logger with JSON format) for integration with centralized log aggregation and observability platforms (ELK, Grafana Loki, Datadog).
+
 
 ### Why Phase 8 Exists
 
@@ -21,10 +25,10 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 
 **Scope:**
 - Rate limiting on `/auth/login` and `/auth/register` using `@nestjs/throttler` or equivalent
-- JWT secret validation at startup — fail fast if `JWT_SECRET` uses the fallback default in a non-development environment
+- JWT secret validation at startup â€” fail fast if `JWT_SECRET` uses the fallback default in a non-development environment
 - Audit logging for authentication events (login success/failure, registration, token refresh)
 
-**CSRF clarification:** This project uses **JWT Bearer tokens** sent via `Authorization` header, not session cookies. The backend has no cookie-based authentication. CSRF attacks exploit cookie auto-attachment — they are **not applicable** to Bearer-token auth. CSRF protection is deferred unless cookie-based sessions are introduced later.
+**CSRF clarification:** This project uses **JWT Bearer tokens** sent via `Authorization` header, not session cookies. The backend has no cookie-based authentication. CSRF attacks exploit cookie auto-attachment â€” they are **not applicable** to Bearer-token auth. CSRF protection is deferred unless cookie-based sessions are introduced later.
 
 **Deliverables:**
 - Rate limiter module (configurable limits via env vars)
@@ -44,11 +48,11 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 - Environment management
 
 **Deliverables:**
-- `Dockerfile` for the backend (multi-stage: build → production image)
+- `Dockerfile` for the backend (multi-stage: build â†’ production image)
 - `docker-compose.prod.yml` (backend + MySQL + Redis + MinIO with production settings)
-- Health check endpoint (`GET /api/v1/health`) — reports DB connection, Redis connection, uptime
-- Environment validation script — checks required vars, warns about fallback defaults
-- CI configuration (GitHub Actions): `pnpm install → lint → build → test → docker build`
+- Health check endpoint (`GET /api/v1/health`) â€” reports DB connection, Redis connection, uptime
+- Environment validation script â€” checks required vars, warns about fallback defaults
+- CI configuration (GitHub Actions): `pnpm install â†’ lint â†’ build â†’ test â†’ docker build`
 - `.env.example` synchronized with all production environment variables
 
 ---
@@ -57,22 +61,22 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 
 **Rationale:** The codebase has zero automated tests. Every future change risks regression. Testing is prioritized by value.
 
-**Priority 1 — Unit Tests (critical business logic):**
-- `AuthService.register()` — duplicate email, password hashing, buyer profile creation
-- `AuthService.login()` — invalid credentials, inactive user, valid login
-- `AuthService.refresh()` — valid token rotation, expired token rejection
-- `CheckoutService.checkout()` — empty cart, product unavailable, insufficient stock, store suspended, successful checkout
-- `ProductService.isSubscriptionActive()` — active subscription, expired, no subscription
-- `CartService.add()` — out-of-stock, quantity exceeds stock, upsert behavior
+**Priority 1 â€” Unit Tests (critical business logic):**
+- `AuthService.register()` â€” duplicate email, password hashing, buyer profile creation
+- `AuthService.login()` â€” invalid credentials, inactive user, valid login
+- `AuthService.refresh()` â€” valid token rotation, expired token rejection
+- `CheckoutService.checkout()` â€” empty cart, product unavailable, insufficient stock, store suspended, successful checkout
+- `ProductService.isSubscriptionActive()` â€” active subscription, expired, no subscription
+- `CartService.add()` â€” out-of-stock, quantity exceeds stock, upsert behavior
 
-**Priority 2 — Integration Tests (module boundaries):**
-- Checkout flow: cart → order creation → stock decrement → cart clear → payment creation
+**Priority 2 â€” Integration Tests (module boundaries):**
+- Checkout flow: cart â†’ order creation â†’ stock decrement â†’ cart clear â†’ payment creation
 - Product visibility: subscription expiry hiding products from public endpoints
-- Auth flow: register → login → protected route access → refresh → old token rejection
+- Auth flow: register â†’ login â†’ protected route access â†’ refresh â†’ old token rejection
 
-**Priority 3 — Critical E2E Tests (API surface):**
-- Complete buyer flow: register → login → create store → create product → add to cart → checkout → verify order
-- Admin flow: seed admin → login → list users → suspend store → verify products hidden
+**Priority 3 â€” Critical E2E Tests (API surface):**
+- Complete buyer flow: register â†’ login â†’ create store â†’ create product â†’ add to cart â†’ checkout â†’ verify order
+- Admin flow: seed admin â†’ login â†’ list users â†’ suspend store â†’ verify products hidden
 
 **Deliverables:**
 - Jest configuration with test database (testcontainers or SQLite for Prisma)
@@ -94,7 +98,7 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 **Deliverables:**
 - Prisma query logging enabled in development (config toggle)
 - N+1 audit of `GET /stores/:id/products`, `GET /orders`, `GET /admin/users`
-- Pagination audit — ensure all list endpoints use configurable `take`/`skip`
+- Pagination audit â€” ensure all list endpoints use configurable `take`/`skip`
 - Redis cache layer (`CacheService` with typed config):
   - Public store listing (`GET /stores`)
   - Public product listing (`GET /stores/:id/products`)
@@ -122,7 +126,7 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 **Rationale:** Quality-of-life improvements that don't block deployment but improve long-term maintainability.
 
 **Deliverables:**
-- Ownership abstraction — `OwnershipGuard` or `PolicyService` to replace repeated `store.userId !== userId` checks
+- Ownership abstraction â€” `OwnershipGuard` or `PolicyService` to replace repeated `store.userId !== userId` checks
 - Strict slug validation (regex pattern for `^[a-z0-9-]+$` in DTOs)
 - `OrderItem` product name/image snapshot on checkout
 - PWA service worker caching strategy refinement (network-first for HTML, cache-first for static, offline fallback)
@@ -140,4 +144,4 @@ All items below are derived from `.ai/KNOWN_ISSUES.md`, `.ai/BACKLOG.md`, and st
 | 5 | Observability | Medium | Medium | Checkpoint 2 (infra for logging) |
 | 6 | Backlog & polish | Medium | Low | None |
 
-**Recommended order:** 1 → 2 → 3 → (4 + 5 parallel) → 6
+**Recommended order:** 1 â†’ 2 â†’ 3 â†’ (4 + 5 parallel) â†’ 6

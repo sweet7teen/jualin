@@ -17,6 +17,15 @@ Items intentionally deferred from earlier phases. May be picked up in future pha
 - Add authentication rate limiting.
 - Add CSRF protection for browser-based flows.
 
+## Observability
+- Validate incoming x-correlation-id values for format (UUID v4) and length before accepting them into the request context.
+- Reject malformed or excessively long correlation IDs to prevent log injection or storage abuse.
+
+## Observability
+- Evolve the health endpoint toward three-state readiness: healthy / degraded / unhealthy.
+- Include Redis connectivity and dependency checks beyond database.
+- Consider readiness and liveness probe endpoints for container orchestration.
+
 ## Performance
 - Redis caching for public store listing.
 - Optimize public product visibility queries. Current implementation runs separate subscription + product queries.

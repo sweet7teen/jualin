@@ -3,6 +3,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
+import { RequestLoggingInterceptor } from './common/interceptors/request-logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -48,6 +50,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Observability
+  app.use(new CorrelationIdMiddleware().use);
+  app.useGlobalInterceptors(new RequestLoggingInterceptor());
 
   const swaggerTitle = configService.get<string>('swagger.title', 'Belidisini API');
   const swaggerDescription = configService.get<string>('swagger.description', 'Belidisini SaaS Marketplace API');

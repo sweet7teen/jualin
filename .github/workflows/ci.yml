@@ -47,8 +47,12 @@ jobs:
       - name: Prisma validate
         run: pnpm --filter @belidisini/database exec prisma validate
 
-      - name: Prisma migrate
-        run: pnpm --filter @belidisini/database exec prisma migrate deploy
+      - # Prisma migrate deploy runs during deployment (not on every PR).
+      # Use: pnpm --filter @belidisini/database exec prisma migrate deploy
+      # This requires a running MySQL instance and should be part of the deployment pipeline.
+
+      - name: Prisma generate
+        run: pnpm --filter @belidisini/database generate
         env:
           DATABASE_URL: mysql://root:root@localhost:3306/belidisini
 

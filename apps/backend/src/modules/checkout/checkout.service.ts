@@ -46,7 +46,7 @@ export class CheckoutService {
 
       if (!product.store.isActive) {
         throw new BadRequestException(
-          `Store "${product.store.name}" is currently suspended — cannot process checkout`,
+          `Store "${product.store.name}" is currently suspended â€” cannot process checkout`,
         );
       }
     }
