@@ -51,6 +51,12 @@
 - **Consequences**: Removed `@unique` from `Product.slug`. No backward compatibility layer needed (unreleased project).
 - **Date**: 2026-07-17
 
+## Product Status vs Subscription Visibility
+- **Decision**: Product status (`DRAFT` / `ACTIVE` / `ARCHIVED`) represents the product lifecycle only. Store subscription status controls public visibility independently. Public endpoints enforce BOTH `Product.status === 'ACTIVE'` AND active subscription at query time.
+- **Reason**: Separating lifecycle from visibility avoids bulk product updates when subscriptions change. Subscription expiry does not modify product status. A seller renewing their subscription immediately regains visibility without any data migration.
+- **Conséquences**: Two service calls (subscription + product) on read endpoints. Can be optimized later via JOIN or caching if needed.
+- **Date**: 2026-07-17
+
 ## Authentication
 - **Decision**: JWT with access + refresh token pair, bcrypt password hashing (configurable cost)
 - **Reason**: Stateless auth suitable for API-first architecture; refresh rotation for security
