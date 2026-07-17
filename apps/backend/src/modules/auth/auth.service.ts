@@ -24,7 +24,8 @@ export class AuthService {
       throw new ConflictException('Email already registered');
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 12);
+    const bcryptRounds = this.configService.get<number>('auth.bcryptRounds', 12);
+    const hashedPassword = await bcrypt.hash(dto.password, bcryptRounds);
 
     const user = await this.prisma.user.create({
       data: {
@@ -104,13 +105,17 @@ export class AuthService {
   private async generateTokens(userId: string, email: string, role: Role) {
     const payload = { sub: userId, email, role };
 
+    const refreshSecret = this.configService.get<string>(
+      'jwt.refreshSecret',
+      'dev-refresh-secret-change-me',
+    );
+    const refreshExpiry = this.configService.get<number>('jwt.refreshExpiry', 604800);
+
     const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, {
-        expiresIn: this.configService.get('JWT_ACCESS_EXPIRY', '15m'),
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get('JWT_REFRESH_SECRET', 'dev-refresh-secret-change-me'),
-        expiresIn: this.configService.get('JWT_REFRESH_EXPIRY', '7d'),
+        secret: refreshSecret,
+        expiresIn: refreshExpiry,
       }),
     ]);
 
@@ -118,8 +123,9 @@ export class AuthService {
   }
 
   private async storeRefreshToken(userId: string, token: string) {
+    const refreshExpiry = this.configService.get<number>('jwt.refreshExpiry', 604800);
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    expiresAt.setSeconds(expiresAt.getSeconds() + refreshExpiry);
 
     await this.prisma.refreshToken.create({
       data: { userId, token, expiresAt },

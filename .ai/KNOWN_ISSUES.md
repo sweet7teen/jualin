@@ -6,7 +6,6 @@
 - **Google Fonts blocked in sandbox**: Frontend uses system font stack. Can switch to `next/font/google` when deploying.
 
 ## Technical Debt
-- **Refresh token expiry hardcoded**: `storeRefreshToken()` hardcodes 7 days instead of reading `JWT_REFRESH_EXPIRY` from config. Fix when adding configurable token lifetimes.
 - **No rate limiting on auth endpoints**: Add rate limiting before production deployment.
 - **Prisma config deprecation**: `package.json#prisma.seed` deprecated in Prisma 6. Migrate to `prisma.config.ts` before Prisma 7.
 

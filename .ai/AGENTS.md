@@ -627,3 +627,9 @@ Never modify global development environment
 unless explicitly requested by the user.
 
 Always prefer project-local changes over machine-global changes.
+
+At the beginning of every new roadmap phase, always re-read every file under `.ai/`.
+
+Never assume previous context is still valid.
+
+Treat the documentation as the source of truth.
