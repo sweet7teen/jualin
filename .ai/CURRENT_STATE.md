@@ -1,34 +1,27 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Phase 5 — Buyer Experience (complete)
+**Status**: Phase 6 — Super Admin (checkpoint 1-2 complete: seed + user management)
 
 ## What's Done
-- pnpm monorepo workspace configured
-- NestJS backend with ConfigModule, typed config layer, Swagger, ValidationPipe, global prefix `/api/v1`
-- Next.js frontend with Tailwind CSS v4, App Router, system font stack
-- Docker Compose — MySQL 8, Redis 7, MinIO
-- Shared packages: `@belidisini/types`, `@belidisini/config`
-- Auth, Store, Product, Cart, Payment, Checkout, Orders, Wishlist modules
-- **Schema**: All required models with indexes and referential actions
+- All Buyer Experience modules completed
+- **Admin seed** (`packages/database/prisma/seed.ts`) — SUPER_ADMIN user created from env vars
+- **Admin module** (`apps/backend/src/modules/admin/`) with user management
+- **User management** — list, detail, update (role, isActive, name, email)
 
-## Buyer Endpoints
+## Admin Endpoints
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| `GET` | `/api/v1/cart` | Buyer | List cart items |
-| `POST` | `/api/v1/cart/items` | Buyer | Add item (upsert) |
-| `PATCH` | `/api/v1/cart/items/:id` | Buyer | Update quantity |
-| `DELETE` | `/api/v1/cart/items/:id` | Buyer | Remove item |
-| `POST` | `/api/v1/checkout` | Buyer | Create order from cart, initiate payment |
-| `GET` | `/api/v1/orders` | Buyer | List orders (paginated) |
-| `GET` | `/api/v1/orders/:id` | Buyer | Get order detail |
-| `GET` | `/api/v1/wishlist` | Buyer | List wishlist items |
-| `POST` | `/api/v1/wishlist/items` | Buyer | Add product to wishlist |
-| `DELETE` | `/api/v1/wishlist/items/:id` | Buyer | Remove from wishlist (hard delete) |
+| `GET` | `/api/v1/admin/users` | SUPER_ADMIN | List users (paginated, filterable by role) |
+| `GET` | `/api/v1/admin/users/:id` | SUPER_ADMIN | Get user detail |
+| `PATCH` | `/api/v1/admin/users/:id` | SUPER_ADMIN | Update user (self-demote/deactivate blocked) |
 
-## Backlog
-See `.ai/BACKLOG.md`.
+## Business Rules
+- Admin cannot change own role → 403
+- Admin cannot deactivate own account → 403
+- Admin can update any other user freely
+- Email uniqueness enforced on update
 
 ## Blockers
-- Prisma migrations require MySQL connection.
-- Frontend uses system font stack.
+- `node_modules` corrupted in sandbox — build/tooling unavailable.
+- Seed script requires network + MySQL.

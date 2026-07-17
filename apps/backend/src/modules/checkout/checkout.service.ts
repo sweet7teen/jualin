@@ -26,7 +26,11 @@ export class CheckoutService {
 
     const cartItems = await this.prisma.cartItem.findMany({
       where: { buyerId: buyerProfile.id },
-      include: { product: true },
+      include: {
+        product: {
+          include: { store: true },
+        },
+      },
     });
 
     if (cartItems.length === 0) {
@@ -38,6 +42,12 @@ export class CheckoutService {
 
       if (product.status !== 'ACTIVE') {
         throw new BadRequestException(`Product "${product.name}" is no longer available`);
+      }
+
+      if (!product.store.isActive) {
+        throw new BadRequestException(
+          `Store "${product.store.name}" is currently suspended — cannot process checkout`,
+        );
       }
     }
 
