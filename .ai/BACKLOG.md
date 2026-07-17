@@ -1,4 +1,4 @@
-﻿# Backlog
+# Backlog
 
 Items intentionally deferred from earlier phases. May be picked up in future phases or dedicated refactoring passes.
 
@@ -23,6 +23,9 @@ Items intentionally deferred from earlier phases. May be picked up in future pha
 
 ## Orders
 - Snapshot product name and primary image into OrderItem.
+
+## Infrastructure
+- Configure Express/NestJS 	rust proxy setting for correct client IP detection behind reverse proxies (required by IP-based rate limiting).
 
 ## PWA
 - Refine Service Worker caching strategy:

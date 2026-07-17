@@ -9,6 +9,27 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  const nodeEnv = configService.get<string>('app.nodeEnv', 'development');
+
+  if (nodeEnv === 'production') {
+    const jwtSecret = configService.get<string>('jwt.secret', '');
+    const jwtRefreshSecret = configService.get<string>('jwt.refreshSecret', '');
+
+    if (!jwtSecret || jwtSecret === 'dev-secret-change-me') {
+      throw new Error(
+        'JWT_SECRET must be set to a secure value in production. ' +
+        'Set the JWT_SECRET environment variable and restart the server.',
+      );
+    }
+
+    if (!jwtRefreshSecret || jwtRefreshSecret === 'dev-refresh-secret-change-me') {
+      throw new Error(
+        'JWT_REFRESH_SECRET must be set to a secure value in production. ' +
+        'Set the JWT_REFRESH_SECRET environment variable and restart the server.',
+      );
+    }
+  }
+
   const port = configService.get<number>('app.port', 3001);
   const frontendUrl = configService.get<string>('app.frontendUrl', 'http://localhost:3000');
   const apiVersion = configService.get<string>('app.apiVersion', 'v1');
@@ -29,10 +50,7 @@ async function bootstrap() {
   );
 
   const swaggerTitle = configService.get<string>('swagger.title', 'Belidisini API');
-  const swaggerDescription = configService.get<string>(
-    'swagger.description',
-    'Belidisini SaaS Marketplace API',
-  );
+  const swaggerDescription = configService.get<string>('swagger.description', 'Belidisini SaaS Marketplace API');
   const swaggerVersion = configService.get<string>('swagger.version', '0.1.0');
 
   const swaggerConfig = new DocumentBuilder()

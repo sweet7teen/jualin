@@ -1,12 +1,13 @@
 # Next Task
 
-## Phase 7: PWA & Polish
+## Phase 8: Production Hardening (proposed — awaiting approval)
 
-All checkpoints complete:
-- Checkpoint 1: Theme persistence ✅
-- Checkpoint 2: Service Worker & Manifest ✅
-- Checkpoint 3: Animated transitions ✅
+### Checkpoints
+1. Security hardening — rate limiting, JWT validation, auth audit logging
+2. Infrastructure & CI/CD — Docker, health checks, CI pipeline
+3. Automated testing — unit (business logic), integration (module boundaries), E2E (critical flows)
+4. Performance & Scalability — N+1 detection, pagination review, Redis caching where justified
+5. Observability — structured logging, request correlation, health checks
+6. Backlog & polish — ownership abstraction, slug validation, order snapshots, PWA refinement
 
-**The Belidisini MVP backend and frontend foundation is feature-complete.**
-
-Future work will be defined based on roadmap review and prioritization.
+See `.ai/ROADMAP.md` for full proposal.

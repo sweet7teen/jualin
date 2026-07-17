@@ -1,29 +1,22 @@
 # Changelog
 
-## [0.12.0] - 2026-07-17
+## [1.1.0] - 2026-07-17
 
 ### Added
-- Animated transitions:
-  - `@keyframes fade-in` — opacity 0→1, 0.4s ease-out
-  - `@keyframes slide-up` — opacity + translateY(12px)→0, 0.4s ease-out
-  - Tailwind theme utilities `animate-fade-in` and `animate-slide-up`
-  - `prefers-reduced-motion: reduce` disables all animations
+- Infrastructure & CI/CD (Phase 8, Checkpoint 2):
+  - `Dockerfile` — multi-stage build (node:22-alpine, pnpm, Prisma generate)
+  - `docker-compose.prod.yml` — MySQL 8, Redis 7, MinIO, backend with health dependencies
+  - `GET /api/v1/health` — returns status, uptime, database connectivity check
+  - `HealthModule` + `HealthController` registered in AppModule
+  - `scripts/validate-env.js` — validates required env vars (DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET)
+  - `.github/workflows/ci.yml` — CI pipeline: lint → type-check → Prisma validate → migrate → build → test
+  - Validation rejects fallback defaults (`dev-secret-change-me`, `change-me-in-production`)
 
-### Changed
-- `layout.tsx` — body now has `animate-fade-in` class
-- `page.tsx` — main container has `animate-slide-up` class
-- `BACKLOG.md` — added PWA Service Worker caching strategy item
+### Fixed
+- Rate limiter description corrected from "sliding window" to "fixed window" in changelog and known issues
+- Added `trust proxy` configuration note to backlog
 
-## [0.11.0] - 2026-07-17
-
-### Added
-- PWA manifest, SVG icons, service worker
-- `BACKLOG.md` already updated via previous turn.
-
-## [0.10.0] - 2026-07-17
+## [1.0.0] - 2026-07-17
 
 ### Added
-- Theme persistence
-
-## Earlier
-- Admin modules, Orders, Wishlist, Cart, Checkout, Payment, Product, Store, Auth, foundation
+- Security hardening: rate limiting, JWT validation, audit logging

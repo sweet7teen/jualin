@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +9,8 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -21,6 +23,7 @@ export class AuthService {
     });
 
     if (existing) {
+      this.logger.warn(`Registration attempt with existing email: ${dto.email}`);
       throw new ConflictException('Email already registered');
     }
 
@@ -41,6 +44,8 @@ export class AuthService {
     const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.storeRefreshToken(user.id, tokens.refreshToken);
 
+    this.logger.log(`User registered: ${user.email} (${user.id})`);
+
     return {
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
       ...tokens,
@@ -53,16 +58,20 @@ export class AuthService {
     });
 
     if (!user || !user.isActive) {
+      this.logger.warn(`Failed login attempt for: ${dto.email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
+      this.logger.warn(`Failed login attempt for: ${dto.email} (invalid password)`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const tokens = await this.generateTokens(user.id, user.email, user.role);
     await this.storeRefreshToken(user.id, tokens.refreshToken);
+
+    this.logger.log(`User logged in: ${user.email} (${user.id})`);
 
     return {
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
@@ -77,6 +86,7 @@ export class AuthService {
     });
 
     if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
+      this.logger.warn('Invalid or expired refresh token used');
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
 
@@ -88,6 +98,8 @@ export class AuthService {
       tokenRecord.user.role,
     );
     await this.storeRefreshToken(tokenRecord.user.id, tokens.refreshToken);
+
+    this.logger.log(`Token refreshed for user: ${tokenRecord.user.email} (${tokenRecord.user.id})`);
 
     return tokens;
   }
@@ -108,10 +120,7 @@ export class AuthService {
   private async generateTokens(userId: string, email: string, role: Role) {
     const payload = { sub: userId, email, role };
 
-    const refreshSecret = this.configService.get<string>(
-      'jwt.refreshSecret',
-      'dev-refresh-secret-change-me',
-    );
+    const refreshSecret = this.configService.get<string>('jwt.refreshSecret', 'dev-refresh-secret-change-me');
     const refreshExpiry = this.configService.get<number>('jwt.refreshExpiry', 604800);
 
     const [accessToken, refreshToken] = await Promise.all([

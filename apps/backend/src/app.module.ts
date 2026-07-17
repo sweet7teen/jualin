@@ -12,6 +12,7 @@ import { CheckoutModule } from './modules/checkout/checkout.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { HealthModule } from './health/health.module';
 import configs from './config';
 
 @Module({
@@ -31,6 +32,7 @@ import configs from './config';
     OrdersModule,
     WishlistModule,
     AdminModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

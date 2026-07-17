@@ -1,16 +1,19 @@
 # Current State
 
 ## Project: Belidisini
-**Status**: Phase 7 — PWA & Polish (checkpoint 3 complete: animated transitions)
+**Status**: Phase 8 — Production Hardening (checkpoint 1-2 complete)
 
 ## What's Done
-- All backend phases 1–6 complete (10 modules, 30+ endpoints)
-- Theme persistence (ThemeProvider, useTheme, FOUC prevention)
-- PWA (manifest, SVG icons, service worker with caching)
-- **Animated transitions** — fade-in on body, slide-up on content, reduced-motion respect
-- No new dependencies — pure CSS keyframes + Tailwind theme utilities
+- All 7 MVP phases complete
+- Security hardening — rate limiting, JWT validation, auth audit logging
+- **Infrastructure & CI/CD**:
+  - `Dockerfile` — multi-stage build (node:22-alpine)
+  - `docker-compose.prod.yml` — MySQL, Redis, MinIO, backend
+  - `GET /api/v1/health` — DB connection check, uptime, status
+  - `scripts/validate-env.js` — validates required env vars on startup
+  - `.github/workflows/ci.yml` — GitHub Actions: lint, type-check, Prisma, build, test
+  - `HealthModule` registered in AppModule
 
 ## Blockers
 - `node_modules` corrupted in sandbox — build/tooling unavailable.
-- Prisma seed/generate/migrate require network + MySQL.
-- PWA icons are SVG placeholders — replace with proper PNGs for production.
+- Docker images must be built in an environment with network access.
